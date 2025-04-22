@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -42,7 +41,6 @@ const App = () => {
             <div className="absolute top-4 right-4 z-50">
               <ThemeToggle theme={theme} setTheme={setTheme} />
             </div>
-            {/* Toaster with 2-3 second duration globally for alerts */}
             <Toaster />
             <Sonner duration={2500} position="top-center" richColors />
             <BrowserRouter>
@@ -52,6 +50,7 @@ const App = () => {
                 <Route path="/profiles" element={<Profiles />} />
                 <Route path="/profile/:id" element={<Profile />} />
                 <Route path="/scanner" element={<Scanner />} />
+                <Route path="/signup" element={<(await import('./pages/Signup')).default />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

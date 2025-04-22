@@ -13,7 +13,7 @@ const Index = () => (
       </h1>
       <div className="text-xl mb-2 max-w-md mx-auto text-[var(--main-fg)] font-semibold tracking-tight">scan to sync</div>
       <p className="text-xl mb-10 max-w-md mx-auto text-[var(--main-fg)] opacity-80">
-        A new way to date—connect in person, then share your profile digitally by QR code.<br />
+        Connect in real life—through real moments, then sync up digitally by scanning your unique QR.<br />
         <span className="font-medium text-pink-600">One connection at a time. Loyalty ensured.</span>
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -22,7 +22,7 @@ const Index = () => (
             <span className="inline-block w-4 h-4 rounded-full bg-[var(--main-fg)]" /> Scan QR
           </button>
         </Link>
-        <Link to="/profile/1" className="sm:w-auto w-full">
+        <Link to="/signup" className="sm:w-auto w-full">
           <button className="theme-btn-outline w-full flex items-center justify-center gap-2">
             <User size={18} /> Create QR
           </button>
@@ -33,7 +33,7 @@ const Index = () => (
     <section className="py-10 px-4 bg-[var(--main-accent)] text-center" style={{ color: "var(--main-fg)" }}>
       <h2 className="text-2xl font-bold mb-2">Ready to connect in real life?</h2>
       <p className="mb-5">Share and scan QR codes for modern, meaningful dating.</p>
-      <Link to="/profile/1">
+      <Link to="/signup">
         <button className="theme-btn" style={{ minWidth: "150px" }}>
           <User className="inline-block mr-2" /> Create Your QR
         </button>
