@@ -1,101 +1,86 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Default (love) theme */
+    --main-bg: #eee;
+    --main-accent: #FFDEE2;
+    --main-fg: #991b38;
+    --button-bg: linear-gradient(90deg, #FFDEE2 60%, #fff 100%);
+    --button-fg: #991b38;
+    --hero-bg: linear-gradient(180deg, #FFDEE2 0%, #fff 100%);
+    --card-bg: #fff;
+    --card-fg: #991b38;
   }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  .nightmode {
+    --main-bg: #000000e6;
+    --main-accent: #ea384c;
+    --main-fg: #fff;
+    --button-bg: linear-gradient(90deg, #ea384c 70%, #323232 100%);
+    --button-fg: #fff;
+    --hero-bg: linear-gradient(180deg, #141416 0%, #ea384c 100%);
+    --card-bg: #191919;
+    --card-fg: #fff;
   }
-}
-
-@layer base {
-  * {
-    @apply border-border;
+  .lovemode {
+    /* Same as :root -- this class is used for explicit theme switching */
+    --main-bg: #eee;
+    --main-accent: #FFDEE2;
+    --main-fg: #991b38;
+    --button-bg: linear-gradient(90deg, #FFDEE2 60%, #fff 100%);
+    --button-fg: #991b38;
+    --hero-bg: linear-gradient(180deg, #FFDEE2 0%, #fff 100%);
+    --card-bg: #fff;
+    --card-fg: #991b38;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[var(--main-bg)] text-[var(--main-fg)];
+    transition: background 0.4s;
   }
 }
+
+/* Card, button, section backgrounds using theme vars */
+.theme-card {
+  @apply rounded-xl shadow-md overflow-hidden;
+  background: var(--card-bg);
+  color: var(--card-fg);
+}
+
+.theme-hero {
+  background: var(--hero-bg);
+}
+
+.theme-btn {
+  background: var(--button-bg);
+  color: var(--button-fg);
+  font-weight: 600;
+  @apply rounded-lg px-6 py-3 shadow-md transition-all;
+  border: none;
+}
+
+.theme-btn-outline {
+  background: transparent;
+  border: 2px solid var(--main-accent);
+  color: var(--main-accent);
+  font-weight: 600;
+  @apply rounded-lg px-6 py-3 transition-all;
+}
+
+.theme-btn:active, .theme-btn:hover {
+  filter: brightness(0.97);
+  box-shadow: 0 2px 14px 0 var(--main-accent);
+}
+
+@media (max-width: 640px) {
+  .theme-btn, .theme-btn-outline {
+    @apply w-full;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    font-size: 1rem;
+  }
+}
+

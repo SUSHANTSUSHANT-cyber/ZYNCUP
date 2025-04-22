@@ -1,7 +1,4 @@
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { QrCode, Heart, MessageCircle, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -10,150 +7,127 @@ const Index = () => {
   const { toast } = useToast();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
+    <div className="min-h-screen" style={{ background: "var(--main-bg)" }}>
       {/* Hero Section */}
-      <header className="py-16 px-6 text-center">
-        <h1 className="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-500">
-          Meet IRL
+      <header className="theme-hero py-16 px-4 text-center bg-[var(--hero-bg)]">
+        <h1 className="text-5xl font-bold mb-4 bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(90deg,var(--main-accent),var(--main-fg))" }}>
+          Meet IRL.
         </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-md mx-auto">
-          Connect with people in real life through QR code sharing - dating that starts face-to-face
+        <p className="text-xl mb-10 max-w-md mx-auto text-[var(--main-fg)] opacity-80">
+          A new way to date—connect in person, then share your profile digitally by QR code.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600">
-            <Link to="/signup" className="flex items-center gap-2">
-              <User size={18} /> Sign Up
-            </Link>
-          </Button>
-          <Button size="lg" variant="outline" className="border-purple-300 text-purple-700">
-            <Link to="/login" className="flex items-center gap-2">
-              Login
-            </Link>
-          </Button>
+          <Link to="/scanner" className="sm:w-auto w-full">
+            <button className="theme-btn w-full flex items-center justify-center gap-2">
+              <QrCode size={18} /> Scan QR
+            </button>
+          </Link>
+          <Link to="/profile/1" className="sm:w-auto w-full">
+            <button className="theme-btn-outline w-full flex items-center justify-center gap-2">
+              <User size={18} /> Create QR
+            </button>
+          </Link>
         </div>
       </header>
 
       {/* How it Works Section */}
-      <section className="py-16 px-6 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-purple-100">
-              <CardHeader>
-                <CardTitle className="text-purple-600 flex items-center gap-2">
-                  <User className="h-5 w-5" /> Create Profile
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Sign up and create your dating profile with photos and interests</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-purple-100">
-              <CardHeader>
-                <CardTitle className="text-purple-600 flex items-center gap-2">
-                  <QrCode className="h-5 w-5" /> Share QR Code
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">When you meet someone interesting, share your unique QR code</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-purple-100">
-              <CardHeader>
-                <CardTitle className="text-purple-600 flex items-center gap-2">
-                  <Heart className="h-5 w-5" /> Connect & Chat
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Scan their QR code to view their profile and start chatting</p>
-              </CardContent>
-            </Card>
+      <section className="py-16 px-4 bg-[var(--main-bg)]">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-10">How It Works</h2>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div className="theme-card p-6 text-center flex flex-col items-center">
+              <User className="h-7 w-7 mx-auto mb-3 text-[var(--main-accent)]" />
+              <div className="font-semibold">Create Profile</div>
+              <p className="text-[var(--main-fg)] opacity-80 text-sm mt-2">Set up your dating profile with your pictures and interests.</p>
+            </div>
+            <div className="theme-card p-6 text-center flex flex-col items-center">
+              <QrCode className="h-7 w-7 mx-auto mb-3 text-[var(--main-accent)]" />
+              <div className="font-semibold">Share QR Code</div>
+              <p className="text-[var(--main-fg)] opacity-80 text-sm mt-2">Show your QR when you meet someone interesting—no more awkward handles.</p>
+            </div>
+            <div className="theme-card p-6 text-center flex flex-col items-center">
+              <Heart className="h-7 w-7 mx-auto mb-3 text-[var(--main-accent)]" />
+              <div className="font-semibold">Connect IRL</div>
+              <p className="text-[var(--main-fg)] opacity-80 text-sm mt-2">Scan theirs to instantly view and start chatting.</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Featured Profiles Preview */}
-      <section className="py-16 px-6">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Featured Profiles</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+      <section className="py-12 px-4">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-8">Featured Profiles</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[1, 2, 3].map((profile) => (
-              <Card key={profile} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="h-48 bg-gradient-to-tr from-purple-400 to-pink-300"></div>
-                <CardHeader className="relative">
-                  <Avatar className="absolute -top-12 left-1/2 transform -translate-x-1/2 h-24 w-24 border-4 border-white">
-                    <AvatarFallback>
-                      {profile === 1 ? "JD" : profile === 2 ? "SM" : "AL"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="pt-14">
-                    <CardTitle>
-                      {profile === 1 ? "Jamie, 28" : profile === 2 ? "Sam, 25" : "Alex, 30"}
-                    </CardTitle>
-                    <CardDescription>
-                      {profile === 1 ? "Photographer" : profile === 2 ? "Software Engineer" : "Yoga Instructor"}
-                    </CardDescription>
+              <div className="theme-card overflow-hidden hover:shadow-lg transition-shadow" key={profile}>
+                <div style={{ height: '7rem', background: "var(--main-accent)" }}></div>
+                <div className="relative -mt-8 flex flex-col items-center">
+                  <div className="bg-white rounded-full border-4 border-white shadow -mt-8 mb-2 w-16 h-16 flex items-center justify-center text-lg font-bold text-pink-600">
+                    {profile === 1 ? "JD" : profile === 2 ? "SM" : "AL"}
                   </div>
-                </CardHeader>
-                <CardContent className="text-gray-600">
-                  <p>
+                  <div className="font-bold mt-1 mb-1">{profile === 1 ? "Jamie, 28" : profile === 2 ? "Sam, 25" : "Alex, 30"}</div>
+                  <div className="text-xs opacity-60 mb-2">
+                    {profile === 1 ? "Photographer" : profile === 2 ? "Software Engineer" : "Yoga Instructor"}
+                  </div>
+                </div>
+                <div className="px-4 pb-4">
+                  <div className="text-sm mb-3">
                     {profile === 1 
                       ? "Love exploring new places and capturing moments with my camera." 
                       : profile === 2 
                         ? "Coffee addict and hiking enthusiast. Let's talk tech or trails!" 
                         : "Mindfulness advocate. Looking for someone to share adventures with."}
-                  </p>
-                </CardContent>
-                <CardFooter className="flex justify-between">
-                  <Button 
-                    variant="secondary" 
-                    className="text-purple-600"
-                    onClick={() => toast({
-                      title: "Demo Only",
-                      description: "Sign up to connect with real users!",
-                    })}
-                  >
-                    <Heart className="h-4 w-4 mr-2" />
-                    Like
-                  </Button>
-                  <Button 
-                    variant="outline"
-                    className="border-purple-300"
-                    onClick={() => toast({
-                      title: "Demo Only",
-                      description: "Sign up to connect with real users!",
-                    })}
-                  >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Message
-                  </Button>
-                </CardFooter>
-              </Card>
+                  </div>
+                  <div className="flex justify-between gap-2">
+                    <button 
+                      className="theme-btn flex-1 flex items-center justify-center gap-1"
+                      onClick={() => toast({
+                        title: "Demo Only",
+                        description: "Sign up to connect with real users!",
+                      })}
+                    >
+                      <Heart className="h-4 w-4" />
+                      Like
+                    </button>
+                    <button 
+                      className="theme-btn-outline flex-1 flex items-center justify-center gap-1"
+                      onClick={() => toast({
+                        title: "Demo Only",
+                        description: "Sign up to connect with real users!",
+                      })}
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      Message
+                    </button>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 px-6 bg-gradient-to-r from-purple-600 to-pink-500 text-white text-center">
-        <h2 className="text-3xl font-bold mb-4">Ready to meet someone special?</h2>
-        <p className="mb-8 max-w-md mx-auto">Create your profile and start connecting in real life today!</p>
-        <Button size="lg" variant="secondary" className="bg-white text-purple-600 hover:bg-gray-100">
-          <Link to="/signup">Get Started</Link>
-        </Button>
+      <section className="py-10 px-4 bg-[var(--main-accent)] text-center" style={{ color: "var(--main-fg)" }}>
+        <h2 className="text-2xl font-bold mb-2">Ready to connect in real life?</h2>
+        <p className="mb-5">Share and scan QR codes for modern, meaningful dating.</p>
+        <Link to="/profile/1">
+          <button className="theme-btn" style={{ minWidth: "150px" }}>
+            <User className="inline-block mr-2" /> Create Your QR
+          </button>
+        </Link>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 bg-gray-50">
-        <div className="max-w-6xl mx-auto text-center text-gray-500">
-          <p>© {new Date().getFullYear()} Meet IRL - Connect through QR codes</p>
-          <div className="mt-4 flex justify-center gap-4">
-            <Link to="/about" className="hover:text-purple-600">About</Link>
-            <Link to="/privacy" className="hover:text-purple-600">Privacy Policy</Link>
-            <Link to="/terms" className="hover:text-purple-600">Terms of Service</Link>
-            <Link to="/contact" className="hover:text-purple-600">Contact</Link>
+      <footer className="py-8 px-4 bg-[var(--main-bg)]">
+        <div className="max-w-2xl mx-auto text-center opacity-70 text-[var(--main-fg)]">
+          <p>© {new Date().getFullYear()} Meet IRL - Date safely, physically, digitally.</p>
+          <div className="mt-2 flex justify-center gap-4 text-sm">
+            <Link to="/about" className="hover:underline">About</Link>
+            <Link to="/privacy" className="hover:underline">Privacy Policy</Link>
+            <Link to="/terms" className="hover:underline">Terms</Link>
+            <Link to="/contact" className="hover:underline">Contact</Link>
           </div>
         </div>
       </footer>
