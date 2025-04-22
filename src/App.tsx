@@ -42,8 +42,9 @@ const App = () => {
             <div className="absolute top-4 right-4 z-50">
               <ThemeToggle theme={theme} setTheme={setTheme} />
             </div>
+            {/* Toaster with 2-3 second duration globally for alerts */}
             <Toaster />
-            <Sonner />
+            <Sonner duration={2500} position="top-center" richColors />
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />

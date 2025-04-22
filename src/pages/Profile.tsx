@@ -1,15 +1,37 @@
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, MessageCircle, QrCode } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectItem, SelectLabel } from "@/components/ui/select";
+import React, { useState } from "react";
+
+// Demo values for select; in production, expand as needed
+const orientations = [
+  "Heterosexual",
+  "Homosexual",
+  "Bisexual",
+  "Asexual",
+  "Pansexual",
+  "Queer",
+  "Other"
+];
+
+const interestsIn = [
+  "Men",
+  "Women",
+  "Everyone",
+  "Other"
+];
 
 const Profile = () => {
   const { toast } = useToast();
-  
-  // This would come from a database in a real implementation
+
+  // State for new fields (would use backend in real app)
+  const [sexualOrientation, setSexualOrientation] = useState<string>("");
+  const [interestedIn, setInterestedIn] = useState<string>("");
+
   const profile = {
     id: "1",
     name: "Alex",
@@ -21,9 +43,9 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50 pt-6 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-pink-100 dark:from-[#111] dark:to-[#222] pt-6 px-4">
       <Card className="max-w-md mx-auto overflow-hidden">
-        <div className="h-48 bg-gradient-to-tr from-purple-400 to-pink-300"></div>
+        <div className="h-48 bg-gradient-to-tr from-pink-300 to-pink-100 dark:from-[#ea384c] dark:to-[#191919]"></div>
         <CardHeader className="relative">
           <Avatar className="absolute -top-12 left-1/2 transform -translate-x-1/2 h-24 w-24 border-4 border-white">
             <AvatarImage src="/placeholder.svg" />
@@ -35,25 +57,58 @@ const Profile = () => {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* New fields for orientation and interested in */}
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div>
+              <Select value={sexualOrientation} onValueChange={setSexualOrientation}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sexual orientation" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Sexual Orientation</SelectLabel>
+                    {orientations.map(o => (
+                      <SelectItem key={o} value={o}>{o}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Select value={interestedIn} onValueChange={setInterestedIn}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Interested in" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Interested In</SelectLabel>
+                    {interestsIn.map(i => (
+                      <SelectItem key={i} value={i}>{i}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
           <div>
             <h3 className="font-medium text-lg">About</h3>
             <p className="text-gray-600">{profile.bio}</p>
           </div>
-          
+
           <div>
             <h3 className="font-medium text-lg">Interests</h3>
             <div className="flex flex-wrap gap-2 mt-2">
               {profile.interests.map((interest, index) => (
                 <span 
                   key={index} 
-                  className="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm"
+                  className="px-3 py-1 bg-pink-100 text-pink-600 rounded-full text-sm"
                 >
                   {interest}
                 </span>
               ))}
             </div>
           </div>
-          
+
           <div>
             <h3 className="font-medium text-lg">Photos</h3>
             <div className="grid grid-cols-3 gap-2 mt-2">
@@ -64,14 +119,19 @@ const Profile = () => {
               ))}
             </div>
           </div>
+          
+          <div className="mt-2 p-3 rounded-md bg-pink-50 text-pink-800 text-xs text-center border border-pink-200 dark:bg-[#2c181a] dark:border-[#ea384c]/40 dark:text-[#ea384c]">
+            <span className="font-semibold">Note:</span> You can connect to <b>one</b> partner only. Loyalty ensured. <br />
+            (This rule is enforced at sign up and connection – ask admin for support if you get stuck.)
+          </div>
         </CardContent>
-        
         <CardFooter className="flex justify-between gap-4">
           <Button 
-            className="flex-1 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600"
+            className="flex-1 bg-gradient-to-r from-pink-600 to-pink-400 hover:from-pink-700 hover:to-pink-500"
             onClick={() => toast({
               title: "Liked!",
               description: "You've liked this profile",
+              duration: 2500
             })}
           >
             <Heart className="h-4 w-4 mr-2" />
@@ -113,6 +173,7 @@ const Profile = () => {
           onClick={() => toast({
             title: "Chat Feature",
             description: "Chat functionality will be available soon!",
+            duration: 2500
           })}
         >
           <MessageCircle className="h-4 w-4 mr-2" />

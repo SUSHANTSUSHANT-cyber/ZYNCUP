@@ -8,11 +8,13 @@ const Index = () => (
     <Navbar />
     {/* Hero Section */}
     <header className="theme-hero py-16 px-4 text-center bg-[var(--hero-bg)] mt-10 sm:mt-0">
-      <h1 className="text-5xl font-bold mb-4 bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(90deg,var(--main-accent),var(--main-fg))" }}>
-        Meet IRL.
+      <h1 className="text-5xl font-extrabold mb-4 bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(90deg,var(--main-accent),var(--main-fg))" }}>
+        ZYNCUP
       </h1>
+      <div className="text-xl mb-2 max-w-md mx-auto text-[var(--main-fg)] font-semibold tracking-tight">scan to sync</div>
       <p className="text-xl mb-10 max-w-md mx-auto text-[var(--main-fg)] opacity-80">
-        A new way to date—connect in person, then share your profile digitally by QR code.
+        A new way to date—connect in person, then share your profile digitally by QR code.<br />
+        <span className="font-medium text-pink-600">One connection at a time. Loyalty ensured.</span>
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link to="/scanner" className="sm:w-auto w-full">
@@ -40,7 +42,7 @@ const Index = () => (
     {/* Footer */}
     <footer className="py-8 px-4 bg-[var(--main-bg)]">
       <div className="max-w-2xl mx-auto text-center opacity-70 text-[var(--main-fg)]">
-        <p>© {new Date().getFullYear()} Meet IRL - Date safely, physically, digitally.</p>
+        <p>© {new Date().getFullYear()} ZYNCUP - Date safely, physically, digitally.</p>
         <div className="mt-2 flex justify-center gap-4 text-sm">
           <Link to="/about" className="hover:underline">About</Link>
           <Link to="/privacy" className="hover:underline">Privacy Policy</Link>
