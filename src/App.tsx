@@ -9,13 +9,13 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Scanner from "./pages/Scanner";
+import HowItWorks from "./pages/HowItWorks";
+import Profiles from "./pages/Profiles";
 import ThemeToggle from "@/components/ThemeToggle";
 
-// Create a client
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Theme state: 'love' = off white & pink, 'night' = black & neon red
   const [theme, setTheme] = useState<"love" | "night">(() => {
     if (typeof window !== "undefined") {
       return (localStorage.getItem("theme") as "love" | "night") || "love";
@@ -38,7 +38,7 @@ const App = () => {
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <div className="relative">
+          <div className="relative min-h-screen bg-[var(--main-bg)]">
             <div className="absolute top-4 right-4 z-50">
               <ThemeToggle theme={theme} setTheme={setTheme} />
             </div>
@@ -47,9 +47,10 @@ const App = () => {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/how-it-works" element={<HowItWorks />} />
+                <Route path="/profiles" element={<Profiles />} />
                 <Route path="/profile/:id" element={<Profile />} />
                 <Route path="/scanner" element={<Scanner />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
