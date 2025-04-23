@@ -31,7 +31,7 @@ const Scanner = () => {
     <div className="min-h-screen bg-[var(--main-bg)] pt-6 px-4">
       <Card className="max-w-md mx-auto theme-card">
         <CardHeader>
-          <CardTitle className="text-center text-xl">
+          <CardTitle className="text-center text-xl text-[var(--card-fg)]">
             Scan a QR Code
           </CardTitle>
         </CardHeader>
@@ -41,21 +41,21 @@ const Scanner = () => {
               <>
                 <div className="absolute inset-0 border-2 border-[var(--main-accent)] rounded-lg animate-pulse"></div>
                 <Camera className="h-16 w-16 text-[var(--main-accent)] animate-pulse" />
-                <div className="absolute bottom-4 left-0 right-0 text-center text-[var(--main-fg)]">
+                <div className="absolute bottom-4 left-0 right-0 text-center text-gray-700 dark:text-gray-300">
                   Scanning...
                 </div>
               </>
             ) : (
               <>
-                <Camera className="h-16 w-16 text-gray-300" />
-                <div className="absolute bottom-4 left-0 right-0 text-center text-gray-500">
+                <Camera className="h-16 w-16 text-gray-400" />
+                <div className="absolute bottom-4 left-0 right-0 text-center text-gray-600 dark:text-gray-400">
                   Camera preview will appear here
                 </div>
               </>
             )}
           </div>
           
-          <p className="text-center mb-6">
+          <p className="text-center mb-6 text-[var(--card-fg)]">
             Position the QR code within the frame to scan
           </p>
           

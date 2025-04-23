@@ -14,6 +14,10 @@
     --hero-bg: linear-gradient(180deg, #FFDEE2 0%, #fff 100%);
     --card-bg: #fff;
     --card-fg: #991b38;
+    --popover-bg: #fff;
+    --popover-fg: #991b38;
+    --dropdown-bg: #fff;
+    --dropdown-fg: #991b38;
   }
   .nightmode {
     --main-bg: #000000e6;
@@ -24,6 +28,10 @@
     --hero-bg: linear-gradient(180deg, #141416 0%, #ea384c 100%);
     --card-bg: #191919;
     --card-fg: #fff;
+    --popover-bg: #191919;
+    --popover-fg: #fff;
+    --dropdown-bg: #292929;
+    --dropdown-fg: #fff;
   }
   .lovemode {
     /* Same as :root -- this class is used for explicit theme switching */
@@ -35,6 +43,10 @@
     --hero-bg: linear-gradient(180deg, #FFDEE2 0%, #fff 100%);
     --card-bg: #fff;
     --card-fg: #991b38;
+    --popover-bg: #fff;
+    --popover-fg: #991b38;
+    --dropdown-bg: #fff;
+    --dropdown-fg: #991b38;
   }
 
   body {
@@ -75,6 +87,18 @@
   box-shadow: 0 2px 14px 0 var(--main-accent);
 }
 
+/* Fix for select dropdowns */
+[data-radix-popper-content-wrapper] > div {
+  background-color: var(--dropdown-bg) !important;
+  color: var(--dropdown-fg) !important;
+}
+
+/* Fix for popover content */
+.popover-content {
+  background-color: var(--popover-bg) !important;
+  color: var(--popover-fg) !important;
+}
+
 @media (max-width: 640px) {
   .theme-btn, .theme-btn-outline {
     @apply w-full;
@@ -83,4 +107,3 @@
     font-size: 1rem;
   }
 }
-
