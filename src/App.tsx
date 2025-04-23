@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +12,7 @@ import Scanner from "./pages/Scanner";
 import HowItWorks from "./pages/HowItWorks";
 import Profiles from "./pages/Profiles";
 import ThemeToggle from "@/components/ThemeToggle";
+import Signup from "./pages/Signup";
 
 const queryClient = new QueryClient();
 
@@ -50,7 +52,7 @@ const App = () => {
                 <Route path="/profiles" element={<Profiles />} />
                 <Route path="/profile/:id" element={<Profile />} />
                 <Route path="/scanner" element={<Scanner />} />
-                <Route path="/signup" element={<(await import('./pages/Signup')).default />} />
+                <Route path="/signup" element={<Signup />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
