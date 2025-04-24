@@ -9,7 +9,149 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          email: string
+          id: string
+          interested_in: string | null
+          name: string
+          sexual_orientation: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          email: string
+          id: string
+          interested_in?: string | null
+          name: string
+          sexual_orientation?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          interested_in?: string | null
+          name?: string
+          sexual_orientation?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      qr_codes: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean | null
+          qr_url: string
+          theme: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          qr_url: string
+          theme?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          qr_url?: string
+          theme?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qr_codes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      qr_orders: {
+        Row: {
+          address: string
+          city: string
+          country: string
+          created_at: string
+          custom_details: Json | null
+          id: string
+          payment_amount: number | null
+          payment_id: string | null
+          payment_status: string
+          qr_code_id: string
+          state: string
+          status: string
+          theme: string | null
+          updated_at: string
+          user_id: string
+          zip_code: string
+        }
+        Insert: {
+          address: string
+          city: string
+          country: string
+          created_at?: string
+          custom_details?: Json | null
+          id?: string
+          payment_amount?: number | null
+          payment_id?: string | null
+          payment_status?: string
+          qr_code_id: string
+          state: string
+          status?: string
+          theme?: string | null
+          updated_at?: string
+          user_id: string
+          zip_code: string
+        }
+        Update: {
+          address?: string
+          city?: string
+          country?: string
+          created_at?: string
+          custom_details?: Json | null
+          id?: string
+          payment_amount?: number | null
+          payment_id?: string | null
+          payment_status?: string
+          qr_code_id?: string
+          state?: string
+          status?: string
+          theme?: string | null
+          updated_at?: string
+          user_id?: string
+          zip_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qr_orders_qr_code_id_fkey"
+            columns: ["qr_code_id"]
+            isOneToOne: false
+            referencedRelation: "qr_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qr_orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

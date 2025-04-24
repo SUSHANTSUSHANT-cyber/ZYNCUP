@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectItem, SelectLabel } from "@/components/ui/select";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 // Demo values for select; in production, expand as needed
 const orientations = [
@@ -166,7 +167,7 @@ const Profile = () => {
         </CardFooter>
       </Card>
       
-      <div className="max-w-md mx-auto mt-6 flex">
+      <div className="max-w-md mx-auto mt-6 flex gap-4">
         <Button 
           variant="secondary" 
           className="flex-1"
@@ -179,6 +180,13 @@ const Profile = () => {
           <MessageCircle className="h-4 w-4 mr-2" />
           Message
         </Button>
+        
+        <Link to="/order-qr" className="flex-1">
+          <Button className="w-full theme-btn">
+            <QrCode className="h-4 w-4 mr-2" />
+            Get Physical QR
+          </Button>
+        </Link>
       </div>
     </div>
   );

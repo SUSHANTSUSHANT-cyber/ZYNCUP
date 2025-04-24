@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -13,6 +12,7 @@ import HowItWorks from "./pages/HowItWorks";
 import Profiles from "./pages/Profiles";
 import ThemeToggle from "@/components/ThemeToggle";
 import Signup from "./pages/Signup";
+import OrderQR from "./pages/OrderQR";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +53,7 @@ const App = () => {
                 <Route path="/profile/:id" element={<Profile />} />
                 <Route path="/scanner" element={<Scanner />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/order-qr" element={<OrderQR />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
