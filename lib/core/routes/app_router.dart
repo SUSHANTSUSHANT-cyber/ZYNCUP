@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/sign_up_screen.dart';
-import '../../features/home/screens/home_page.dart';
+import '../../features/profile/screens/profile_gate.dart';
 
 abstract final class AppRoutes {
   static const home = '/';
@@ -24,7 +24,7 @@ class AppRouter {
       builder: (_) => switch (guardedRoute) {
         AppRoutes.login => const LoginScreen(),
         AppRoutes.signUp => const SignUpScreen(),
-        _ => const HomePage(),
+        _ => const ProfileGate(),
       },
       settings: settings,
     );
