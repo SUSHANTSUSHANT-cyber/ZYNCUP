@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -195,7 +195,7 @@ class _ProfileGateState extends State<_ProfileGate> {
           );
         }
 
-        return const HomePage();
+        return HomePage(profile: profile);
       },
     );
   }

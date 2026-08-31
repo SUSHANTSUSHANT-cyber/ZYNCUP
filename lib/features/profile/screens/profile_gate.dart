@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../auth/services/auth_service.dart';
 import '../../home/screens/home_page.dart';
@@ -23,12 +23,18 @@ class _ProfileGateState extends State<ProfileGate> {
 
   Future<ZyncupProfile?> _loadProfile() {
     final user = AuthService.currentUser;
-    if (user == null) return Future.value(null);
+
+    if (user == null) {
+      return Future.value(null);
+    }
+
     return ProfileService.getProfile(user.id);
   }
 
   void _retry() {
-    setState(() => _profileFuture = _loadProfile());
+    setState(() {
+      _profileFuture = _loadProfile();
+    });
   }
 
   @override
@@ -48,9 +54,11 @@ class _ProfileGateState extends State<ProfileGate> {
         }
 
         final profile = snapshot.data;
+
         if (profile == null) {
           return _ProfileLoadError(
-            message: 'Your profile could not be found yet. Please try again.',
+            message:
+                'Your profile could not be found yet. Please try again.',
             onRetry: _retry,
             onSignOut: () => AuthService.signOut(),
           );
@@ -63,7 +71,9 @@ class _ProfileGateState extends State<ProfileGate> {
           );
         }
 
-        return const HomePage();
+        return HomePage(
+          profile: profile,
+        );
       },
     );
   }
@@ -75,7 +85,9 @@ class _ProfileLoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }
@@ -98,7 +110,9 @@ class _ProfileLoadError extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 440),
+            constraints: const BoxConstraints(
+              maxWidth: 440,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

@@ -9,7 +9,12 @@ import '../../profile/screens/profile_screen.dart';
 import '../../profile/services/profile_service.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({
+    required this.profile,
+    super.key,
+  });
+
+  final ZyncupProfile profile;
 
   Future<void> _signOut(BuildContext context) async {
     try {
@@ -26,23 +31,7 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> _openProfile(BuildContext context) async {
-    final user = AuthService.currentUser;
-    if (user == null) return;
-
     try {
-      final profile = await ProfileService.getProfile(user.id);
-
-      if (!context.mounted) return;
-
-      if (profile == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Unable to load your profile.'),
-          ),
-        );
-        return;
-      }
-
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (_) => ProfileScreen(
@@ -76,41 +65,13 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> _openZyncupCode(BuildContext context) async {
-    final user = AuthService.currentUser;
-    if (user == null) return;
-
-    try {
-      final profile = await ProfileService.getProfile(user.id);
-
-      if (!context.mounted) return;
-
-      if (profile == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Unable to load your ZYNCUP ID.'),
-          ),
-        );
-        return;
-      }
-
-      await Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (_) => MyZyncupCodeScreen(
-            profile: profile,
-          ),
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => MyZyncupCodeScreen(
+          profile: profile,
         ),
-      );
-    } catch (_) {
-      if (!context.mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Unable to open your ZYNCUP Code. Please try again.',
-          ),
-        ),
-      );
-    }
+      ),
+    );
   }
 
   Future<void> _scanZyncupCode(BuildContext context) async {
@@ -150,18 +111,23 @@ class HomePage extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           children: [
             const SizedBox(height: 12),
+
             Text(
-              'Hey',
+              'Hey, ${profile.displayName}',
               style: theme.textTheme.headlineMedium,
             ),
+
             const SizedBox(height: 8),
+
             Text(
               'Someone interesting might just be one scan away.',
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
+
             const SizedBox(height: 28),
+
             _MainActionCard(
               icon: Icons.qr_code_2,
               title: 'My ZYNCUP Code',
@@ -170,12 +136,16 @@ class HomePage extends StatelessWidget {
               buttonLabel: 'Show my code',
               onPressed: () => _openZyncupCode(context),
             ),
+
             const SizedBox(height: 16),
+
             Text(
               'Explore',
               style: theme.textTheme.titleLarge,
             ),
+
             const SizedBox(height: 12),
+
             Row(
               children: [
                 Expanded(
@@ -205,7 +175,9 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
+
             const SizedBox(height: 12),
+
             _WideActionCard(
               icon: Icons.person_outline,
               title: 'My Profile',
@@ -213,7 +185,9 @@ class HomePage extends StatelessWidget {
                   'View and manage your ZYNCUP identity.',
               onTap: () => _openProfile(context),
             ),
+
             const SizedBox(height: 32),
+
             Center(
               child: Text(
                 'More Than Friends',
@@ -223,6 +197,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
+
             const SizedBox(height: 12),
           ],
         ),
