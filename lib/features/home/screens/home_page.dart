@@ -1,7 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../../shared/widgets/theme_selector.dart';
 import '../../auth/services/auth_service.dart';
+import '../../connections/screens/my_zyncup_code_screen.dart';
+import '../../connections/screens/scan_zyncup_screen.dart';
+import '../../profile/screens/edit_profile_screen.dart';
+import '../../profile/screens/profile_screen.dart';
+import '../../profile/services/profile_service.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -20,12 +25,113 @@ class HomePage extends StatelessWidget {
     }
   }
 
+  Future<void> _openProfile(BuildContext context) async {
+    final user = AuthService.currentUser;
+    if (user == null) return;
+
+    try {
+      final profile = await ProfileService.getProfile(user.id);
+
+      if (!context.mounted) return;
+
+      if (profile == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unable to load your profile.'),
+          ),
+        );
+        return;
+      }
+
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => ProfileScreen(
+            profile: profile,
+            onEdit: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => EditProfileScreen(
+                    profile: profile,
+                    onSaved: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Unable to open your profile. Please try again.',
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _openZyncupCode(BuildContext context) async {
+    final user = AuthService.currentUser;
+    if (user == null) return;
+
+    try {
+      final profile = await ProfileService.getProfile(user.id);
+
+      if (!context.mounted) return;
+
+      if (profile == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unable to load your ZYNCUP ID.'),
+          ),
+        );
+        return;
+      }
+
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => MyZyncupCodeScreen(
+            profile: profile,
+          ),
+        ),
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Unable to open your ZYNCUP Code. Please try again.',
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _scanZyncupCode(BuildContext context) async {
+    final scannedId = await Navigator.of(context).push<String>(
+      MaterialPageRoute<String>(
+        builder: (_) => const ScanZyncupScreen(),
+      ),
+    );
+
+    if (!context.mounted || scannedId == null) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Scanned ZYNCUP ID: $scannedId'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final user = AuthService.currentUser;
-
-    final displayName = user?.userMetadata?['display_name'] as String?;
 
     return Scaffold(
       appBar: AppBar(
@@ -44,50 +150,32 @@ class HomePage extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           children: [
             const SizedBox(height: 12),
-
-            // Welcome section
             Text(
-              'Hey${displayName != null && displayName.isNotEmpty ? ', $displayName' : ''}',
+              'Hey',
               style: theme.textTheme.headlineMedium,
             ),
-
             const SizedBox(height: 8),
-
             Text(
               'Someone interesting might just be one scan away.',
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-
             const SizedBox(height: 28),
-
-            // Main action card
             _MainActionCard(
               icon: Icons.qr_code_2,
               title: 'My ZYNCUP Code',
               subtitle:
                   'Your personal code for starting a connection.',
               buttonLabel: 'Show my code',
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Your ZYNCUP Code is coming next.'),
-                  ),
-                );
-              },
+              onPressed: () => _openZyncupCode(context),
             ),
-
             const SizedBox(height: 16),
-
             Text(
               'Explore',
               style: theme.textTheme.titleLarge,
             ),
-
             const SizedBox(height: 12),
-
-            // Quick actions
             Row(
               children: [
                 Expanded(
@@ -95,13 +183,7 @@ class HomePage extends StatelessWidget {
                     icon: Icons.qr_code_scanner,
                     title: 'Scan',
                     subtitle: 'Discover someone',
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('QR Scanner is coming next.'),
-                        ),
-                      );
-                    },
+                    onTap: () => _scanZyncupCode(context),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -113,7 +195,9 @@ class HomePage extends StatelessWidget {
                     onTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Connections are coming soon.'),
+                          content: Text(
+                            'Connections are coming soon.',
+                          ),
                         ),
                       );
                     },
@@ -121,24 +205,15 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
-
             _WideActionCard(
               icon: Icons.person_outline,
               title: 'My Profile',
-              subtitle: 'View and manage your ZYNCUP identity.',
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Profile view is coming next.'),
-                  ),
-                );
-              },
+              subtitle:
+                  'View and manage your ZYNCUP identity.',
+              onTap: () => _openProfile(context),
             ),
-
             const SizedBox(height: 32),
-
             Center(
               child: Text(
                 'More Than Friends',
@@ -148,7 +223,6 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 12),
           ],
         ),

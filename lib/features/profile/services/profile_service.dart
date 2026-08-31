@@ -1,3 +1,5 @@
+﻿import 'package:flutter/foundation.dart';
+
 import '../../../services/supabase_service.dart';
 
 class ZyncupProfile {
@@ -39,7 +41,6 @@ class ZyncupProfile {
   final bool sharePhone;
   final bool shareEmail;
   final bool shareWebsite;
-
   final bool shareInstagram;
   final bool shareLinkedin;
   final bool shareOtherSocial;
@@ -65,7 +66,6 @@ class ZyncupProfile {
       sharePhone: map['share_phone'] as bool? ?? false,
       shareEmail: map['share_email'] as bool? ?? false,
       shareWebsite: map['share_website'] as bool? ?? false,
-
       shareInstagram: map['share_instagram'] as bool? ?? false,
       shareLinkedin: map['share_linkedin'] as bool? ?? false,
       shareOtherSocial: map['share_other_social'] as bool? ?? false,
@@ -107,7 +107,46 @@ class ProfileService {
         .eq('id', userId)
         .maybeSingle();
 
-    if (data == null) return null;
+    if (data == null) {
+      return null;
+    }
+
+    return ZyncupProfile.fromMap(data);
+  }
+
+  static Future<ZyncupProfile?> getProfileByZyncupId(
+    String zyncupId,
+  ) async {
+    final data = await SupabaseService.client
+        .from('profiles')
+        .select(
+          '''
+          id,
+          zyncup_id,
+          display_name,
+          bio,
+          profile_image_url,
+          phone,
+          email,
+          website,
+          instagram,
+          linkedin,
+          other_social,
+          share_phone,
+          share_email,
+          share_website,
+          share_instagram,
+          share_linkedin,
+          share_other_social,
+          onboarding_completed
+          ''',
+        )
+        .eq('zyncup_id', zyncupId.trim())
+        .maybeSingle();
+
+    if (data == null) {
+      return null;
+    }
 
     return ZyncupProfile.fromMap(data);
   }
@@ -129,28 +168,37 @@ class ProfileService {
     bool shareLinkedin = false,
     bool shareOtherSocial = false,
   }) async {
-    await SupabaseService.client.from('profiles').update({
-      'display_name': displayName.trim(),
-      'bio': _nullableValue(bio),
+    final result = await SupabaseService.client
+        .from('profiles')
+        .update({
+          'display_name': displayName.trim(),
+          'bio': _nullableValue(bio),
 
-      'phone': _nullableValue(phone),
-      'email': _nullableValue(email),
-      'website': _nullableValue(website),
+          'phone': _nullableValue(phone),
+          'email': _nullableValue(email),
+          'website': _nullableValue(website),
 
-      'instagram': _nullableValue(instagram),
-      'linkedin': _nullableValue(linkedin),
-      'other_social': _nullableValue(otherSocial),
+          'instagram': _nullableValue(instagram),
+          'linkedin': _nullableValue(linkedin),
+          'other_social': _nullableValue(otherSocial),
 
-      'share_phone': sharePhone,
-      'share_email': shareEmail,
-      'share_website': shareWebsite,
+          'share_phone': sharePhone,
+          'share_email': shareEmail,
+          'share_website': shareWebsite,
 
-      'share_instagram': shareInstagram,
-      'share_linkedin': shareLinkedin,
-      'share_other_social': shareOtherSocial,
+          'share_instagram': shareInstagram,
+          'share_linkedin': shareLinkedin,
+          'share_other_social': shareOtherSocial,
 
-      'onboarding_completed': true,
-    }).eq('id', userId);
+          'onboarding_completed': true,
+        })
+        .eq('id', userId)
+        .select()
+        .single();
+
+    debugPrint('========== PROFILE UPDATE RESULT ==========');
+    debugPrint(result.toString());
+    debugPrint('===========================================');
   }
 
   static Future<void> updateProfile({
@@ -170,34 +218,41 @@ class ProfileService {
     bool shareLinkedin = false,
     bool shareOtherSocial = false,
   }) async {
-    await SupabaseService.client.from('profiles').update({
-      'display_name': displayName.trim(),
-      'bio': _nullableValue(bio),
+    await SupabaseService.client
+        .from('profiles')
+        .update({
+          'display_name': displayName.trim(),
+          'bio': _nullableValue(bio),
 
-      'phone': _nullableValue(phone),
-      'email': _nullableValue(email),
-      'website': _nullableValue(website),
+          'phone': _nullableValue(phone),
+          'email': _nullableValue(email),
+          'website': _nullableValue(website),
 
-      'instagram': _nullableValue(instagram),
-      'linkedin': _nullableValue(linkedin),
-      'other_social': _nullableValue(otherSocial),
+          'instagram': _nullableValue(instagram),
+          'linkedin': _nullableValue(linkedin),
+          'other_social': _nullableValue(otherSocial),
 
-      'share_phone': sharePhone,
-      'share_email': shareEmail,
-      'share_website': shareWebsite,
+          'share_phone': sharePhone,
+          'share_email': shareEmail,
+          'share_website': shareWebsite,
 
-      'share_instagram': shareInstagram,
-      'share_linkedin': shareLinkedin,
-      'share_other_social': shareOtherSocial,
-    }).eq('id', userId);
+          'share_instagram': shareInstagram,
+          'share_linkedin': shareLinkedin,
+          'share_other_social': shareOtherSocial,
+        })
+        .eq('id', userId);
   }
 
   static String? _nullableValue(String? value) {
-    if (value == null) return null;
+    if (value == null) {
+      return null;
+    }
 
     final trimmedValue = value.trim();
 
-    if (trimmedValue.isEmpty) return null;
+    if (trimmedValue.isEmpty) {
+      return null;
+    }
 
     return trimmedValue;
   }
