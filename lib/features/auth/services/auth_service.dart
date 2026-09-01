@@ -1,9 +1,13 @@
+﻿import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../services/supabase_service.dart';
 
 class AuthService {
   AuthService._();
+
+  static const String _mobileAuthRedirect =
+      'zyncup://auth-callback/';
 
   static bool get isReady => SupabaseService.isInitialized;
 
@@ -15,7 +19,10 @@ class AuthService {
   static User? get currentUser => currentSession?.user;
 
   static Stream<AuthState> get authStateChanges {
-    if (!isReady) return const Stream<AuthState>.empty();
+    if (!isReady) {
+      return const Stream<AuthState>.empty();
+    }
+
     return SupabaseService.client.auth.onAuthStateChange;
   }
 
@@ -24,7 +31,12 @@ class AuthService {
     required String password,
   }) {
     _checkReady();
-    return SupabaseService.client.auth.signUp(email: email, password: password);
+
+    return SupabaseService.client.auth.signUp(
+      email: email,
+      password: password,
+      emailRedirectTo: kIsWeb ? null : _mobileAuthRedirect,
+    );
   }
 
   static Future<AuthResponse> signIn({
@@ -32,6 +44,7 @@ class AuthService {
     required String password,
   }) {
     _checkReady();
+
     return SupabaseService.client.auth.signInWithPassword(
       email: email,
       password: password,
