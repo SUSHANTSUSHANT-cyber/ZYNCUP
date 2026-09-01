@@ -4,6 +4,7 @@ import '../../../shared/widgets/theme_selector.dart';
 import '../../auth/services/auth_service.dart';
 import '../../connections/screens/my_zyncup_code_screen.dart';
 import '../../connections/screens/scan_zyncup_screen.dart';
+import '../../connections/screens/connections_screen.dart';
 import '../../profile/screens/edit_profile_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../profile/services/profile_service.dart';
@@ -163,11 +164,9 @@ class HomePage extends StatelessWidget {
                     title: 'Connections',
                     subtitle: 'Your people',
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Connections are coming soon.',
-                          ),
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const ConnectionsScreen(),
                         ),
                       );
                     },
@@ -354,3 +353,7 @@ class _WideActionCard extends StatelessWidget {
     );
   }
 }
+
+
+
+

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum ZyncupThemeOption {
@@ -22,11 +22,9 @@ enum ZyncupThemeOption {
 
 class ThemeController extends ChangeNotifier {
   ThemeController({
-    required SharedPreferencesAsync preferences,
+    required this._preferences,
     ZyncupThemeOption initialTheme = ZyncupThemeOption.light,
-  }) : _preferences = preferences,
-       _selectedTheme = initialTheme;
-
+  }) : _selectedTheme = initialTheme;
   static const _preferenceKey = 'zyncup_theme';
 
   final SharedPreferencesAsync _preferences;
@@ -66,3 +64,5 @@ class ThemeScope extends InheritedNotifier<ThemeController> {
     return scope!.notifier!;
   }
 }
+
+
