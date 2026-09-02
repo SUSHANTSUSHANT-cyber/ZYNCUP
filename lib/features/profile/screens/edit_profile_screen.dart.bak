@@ -1,9 +1,4 @@
-﻿import 'dart:typed_data';
-
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
-import '../../auth/services/auth_service.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../services/profile_service.dart';
 
@@ -23,7 +18,6 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _imagePicker = ImagePicker();
 
   late final TextEditingController _displayNameController;
   late final TextEditingController _bioController;
@@ -41,13 +35,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late bool _shareLinkedin;
   late bool _shareOtherSocial;
 
-  Uint8List? _selectedImageBytes;
-  String? _selectedImageExtension;
-  String? _selectedImageContentType;
-  String? _profileImageUrl;
-
   bool _isSaving = false;
-  bool _isPickingImage = false;
   String? _errorMessage;
 
   @override
@@ -59,10 +47,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _displayNameController =
         TextEditingController(text: profile.displayName);
     _bioController = TextEditingController(text: profile.bio ?? '');
-    _emailController = TextEditingController(text: profile.email ?? '');
-    _phoneController = TextEditingController(text: profile.phone ?? '');
+
+    _emailController =
+        TextEditingController(text: profile.email ?? '');
+    _phoneController =
+        TextEditingController(text: profile.phone ?? '');
     _websiteController =
         TextEditingController(text: profile.website ?? '');
+
     _instagramController =
         TextEditingController(text: profile.instagram ?? '');
     _linkedinController =
@@ -76,8 +68,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _shareInstagram = profile.shareInstagram;
     _shareLinkedin = profile.shareLinkedin;
     _shareOtherSocial = profile.shareOtherSocial;
-
-    _profileImageUrl = profile.profileImageUrl;
   }
 
   @override
@@ -93,55 +83,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
   }
 
-  Future<void> _pickProfileImage() async {
-    setState(() {
-      _isPickingImage = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final image = await _imagePicker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 85,
-        maxWidth: 1200,
-        maxHeight: 1200,
-      );
-
-      if (!mounted) return;
-
-      if (image == null) {
-        setState(() {
-          _isPickingImage = false;
-        });
-        return;
-      }
-
-      final bytes = await image.readAsBytes();
-
-      if (!mounted) return;
-
-      final extension = image.name.contains('.')
-          ? image.name.split('.').last.toLowerCase()
-          : 'jpg';
-
-      setState(() {
-        _selectedImageBytes = bytes;
-        _selectedImageExtension =
-            extension == 'jpeg' ? 'jpg' : extension;
-        _selectedImageContentType =
-            extension == 'png' ? 'image/png' : 'image/jpeg';
-        _isPickingImage = false;
-      });
-    } catch (error) {
-      if (!mounted) return;
-
-      setState(() {
-        _isPickingImage = false;
-        _errorMessage = 'Unable to select the image: $error';
-      });
-    }
-  }
-
   Future<void> _save() async {
     FocusScope.of(context).unfocus();
 
@@ -155,54 +96,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
 
     try {
-      final currentUser = AuthService.currentUser;
-
-      debugPrint('========== PROFILE SAVE DEBUG ==========');
-      debugPrint('Auth user ID: ${currentUser?.id}');
-      debugPrint('Profile ID: ${widget.profile.id}');
-      debugPrint(
-        'IDs match: ${currentUser?.id == widget.profile.id}',
-      );
-      debugPrint('========================================');
-
-      var imageUrl = _profileImageUrl;
-
-      if (_selectedImageBytes != null &&
-          _selectedImageExtension != null &&
-          _selectedImageContentType != null) {
-        imageUrl = await ProfileService.uploadProfileImage(
-          userId: widget.profile.id,
-          imageBytes: _selectedImageBytes!,
-          fileExtension: _selectedImageExtension!,
-          contentType: _selectedImageContentType!,
-        );
-      }
-
-      if (!mounted) return;
-
       await ProfileService.updateProfile(
         userId: widget.profile.id,
         displayName: _displayNameController.text,
-        profileImageUrl: imageUrl,
         bio: _bioController.text,
+
         email: _emailController.text,
         phone: _phoneController.text,
         website: _websiteController.text,
+
         instagram: _instagramController.text,
         linkedin: _linkedinController.text,
         otherSocial: _otherSocialController.text,
+
         shareEmail:
             _emailController.text.trim().isNotEmpty && _shareEmail,
+
         sharePhone:
             _phoneController.text.trim().isNotEmpty && _sharePhone,
+
         shareWebsite:
             _websiteController.text.trim().isNotEmpty && _shareWebsite,
+
         shareInstagram:
             _instagramController.text.trim().isNotEmpty &&
             _shareInstagram,
+
         shareLinkedin:
             _linkedinController.text.trim().isNotEmpty &&
             _shareLinkedin,
+
         shareOtherSocial:
             _otherSocialController.text.trim().isNotEmpty &&
             _shareOtherSocial,
@@ -239,8 +162,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
@@ -256,72 +177,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Center(
-                      child: GestureDetector(
-                        onTap: (_isSaving || _isPickingImage)
-                            ? null
-                            : _pickProfileImage,
-                        child: Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            CircleAvatar(
-                              radius: 58,
-                              backgroundColor:
-                                  theme.colorScheme.surfaceContainerHighest,
-                              backgroundImage:
-                                  _selectedImageBytes != null
-                                      ? MemoryImage(_selectedImageBytes!)
-                                      : (_profileImageUrl != null &&
-                                              _profileImageUrl!
-                                                  .trim()
-                                                  .isNotEmpty
-                                          ? NetworkImage(_profileImageUrl!)
-                                          : null),
-                              child: (_selectedImageBytes == null &&
-                                      (_profileImageUrl == null ||
-                                          _profileImageUrl!.trim().isEmpty))
-                                  ? Icon(
-                                      Icons.person_outline,
-                                      size: 52,
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    )
-                                  : null,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.primary,
-                                shape: BoxShape.circle,
-                              ),
-                              child: _isPickingImage
-                                  ? const SizedBox.square(
-                                      dimension: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : Icon(
-                                      Icons.camera_alt,
-                                      size: 18,
-                                      color: theme.colorScheme.onPrimary,
-                                    ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    Center(
-                      child: Text(
-                        'Tap your photo to change it',
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ),
-
-                    const SizedBox(height: 24),
-
                     TextFormField(
                       controller: _displayNameController,
                       enabled: !_isSaving,
@@ -515,7 +370,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       Text(
                         _errorMessage!,
                         style: TextStyle(
-                          color: theme.colorScheme.error,
+                          color: Theme.of(context).colorScheme.error,
                         ),
                       ),
                     ],
@@ -657,4 +512,3 @@ String? _validateDisplayName(String? value) {
 
   return null;
 }
-
