@@ -1,8 +1,8 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
+import '../../../core/config/app_config.dart';
 import '../../profile/services/profile_service.dart';
-
 class MyZyncupCodeScreen extends StatelessWidget {
   const MyZyncupCodeScreen({
     required this.profile,
@@ -113,3 +113,5 @@ class MyZyncupCodeScreen extends StatelessWidget {
     );
   }
 }
+
+

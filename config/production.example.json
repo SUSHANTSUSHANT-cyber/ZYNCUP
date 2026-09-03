@@ -1,0 +1,8 @@
+{
+  "SUPABASE_URL": "https://cuoiwhttjqvigiigdjls.supabase.co",
+  "SUPABASE_PUBLISHABLE_KEY": "YOUR_PUBLISHABLE_KEY",
+  "ZYNCUP_WEB_BASE_URL": "https://zyncup.in",
+  "ZYNCUP_PROFILE_PATH": "/u",
+  "ZYNCUP_ANDROID_APP_URL": "https://play.google.com/store/apps/details?id=YOUR_ANDROID_PACKAGE",
+  "ZYNCUP_IOS_APP_URL": "https://apps.apple.com/app/idYOUR_IOS_APP_ID"
+}
