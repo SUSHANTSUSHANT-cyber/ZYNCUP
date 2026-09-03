@@ -212,22 +212,38 @@ class _ScannedProfileScreenState extends State<ScannedProfileScreen> {
                 children: [
                   const SizedBox(height: 20),
 
-                  CircleAvatar(
-                    radius: 48,
-                    backgroundImage:
-                        profile.profileImageUrl != null &&
+                  Center(
+                    child: SizedBox(
+                      width: 96,
+                      height: 96,
+                      child: ClipOval(
+                        child: profile.profileImageUrl != null &&
                                 profile.profileImageUrl!.isNotEmpty
-                            ? NetworkImage(profile.profileImageUrl!)
-                            : null,
-                    child: profile.profileImageUrl == null ||
-                            profile.profileImageUrl!.isEmpty
-                        ? Text(
-                            profile.displayName.isNotEmpty
-                                ? profile.displayName[0].toUpperCase()
-                                : '?',
-                            style: theme.textTheme.headlineMedium,
-                          )
-                        : null,
+                            ? Image.network(
+                                profile.profileImageUrl!,
+                                fit: BoxFit.contain,
+                                errorBuilder:
+                                    (context, error, stackTrace) {
+                                  return Center(
+                                    child: Text(
+                                      profile.displayName.isNotEmpty
+                                          ? profile.displayName[0].toUpperCase()
+                                          : '?',
+                                      style: theme.textTheme.headlineMedium,
+                                    ),
+                                  );
+                                },
+                              )
+                            : Center(
+                                child: Text(
+                                  profile.displayName.isNotEmpty
+                                      ? profile.displayName[0].toUpperCase()
+                                      : '?',
+                                  style: theme.textTheme.headlineMedium,
+                                ),
+                              ),
+                      ),
+                    ),
                   ),
 
                   const SizedBox(height: 16),

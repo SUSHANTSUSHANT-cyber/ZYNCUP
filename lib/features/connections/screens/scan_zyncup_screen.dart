@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../profile/screens/scanned_profile_screen.dart';
@@ -14,10 +15,13 @@ class ScanZyncupScreen extends StatefulWidget {
 }
 
 class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
-  final MobileScannerController _controller = MobileScannerController();
+  final MobileScannerController _controller =
+      MobileScannerController();
+  final ImagePicker _imagePicker = ImagePicker();
 
   bool _handledScan = false;
   bool _isLoadingProfile = false;
+  bool _isPickingImage = false;
 
   @override
   void dispose() {
@@ -25,7 +29,9 @@ class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
     super.dispose();
   }
 
-  Future<void> _handleDetection(BarcodeCapture capture) async {
+  Future<void> _handleDetection(
+    BarcodeCapture capture,
+  ) async {
     if (_handledScan || _isLoadingProfile) return;
 
     for (final barcode in capture.barcodes) {
@@ -47,8 +53,111 @@ class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
       if (!mounted) return;
 
       await _showProfile(value);
-
       return;
+    }
+  }
+
+  Future<void> _pickQrImage() async {
+    if (_isPickingImage || _isLoadingProfile) return;
+
+    setState(() {
+      _isPickingImage = true;
+    });
+
+    try {
+      await _controller.stop();
+
+      final image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+      );
+
+      if (image == null) {
+        if (mounted) {
+          setState(() {
+            _isPickingImage = false;
+          });
+        }
+
+        await _controller.start();
+        return;
+      }
+
+      if (!mounted) return;
+
+      setState(() {
+        _isPickingImage = false;
+        _isLoadingProfile = true;
+        _handledScan = true;
+      });
+
+      final capture = await _controller.analyzeImage(image.path);
+
+      if (capture == null || capture.barcodes.isEmpty) {
+        _resetScanner();
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'No QR code found in this image.',
+            ),
+          ),
+        );
+
+        await _controller.start();
+        return;
+      }
+
+      String? zyncupId;
+
+      for (final barcode in capture.barcodes) {
+        final value = barcode.rawValue?.trim();
+
+        if (value != null &&
+            value.isNotEmpty &&
+            value.startsWith('ZYNC-')) {
+          zyncupId = value;
+          break;
+        }
+      }
+
+      if (zyncupId == null) {
+        _resetScanner();
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'This image does not contain a valid ZYNCUP Code.',
+            ),
+          ),
+        );
+
+        await _controller.start();
+        return;
+      }
+
+      await _showProfile(zyncupId);
+    } catch (error) {
+      debugPrint(
+        'ZYNCUP: QR image scan error = $error',
+      );
+
+      _resetScanner();
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Unable to read the QR image. Please try another image.',
+          ),
+        ),
+      );
+
+      await _controller.start();
     }
   }
 
@@ -60,8 +169,7 @@ class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
       if (!mounted) return;
 
       if (profile == null) {
-        _handledScan = false;
-        _isLoadingProfile = false;
+        _resetScanner();
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -85,15 +193,16 @@ class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
 
       if (!mounted) return;
 
-      _handledScan = false;
-      _isLoadingProfile = false;
-
+      _resetScanner();
       await _controller.start();
-    } catch (_) {
+    } catch (error) {
+      debugPrint(
+        'ZYNCUP: Profile loading error = $error',
+      );
+
       if (!mounted) return;
 
-      _handledScan = false;
-      _isLoadingProfile = false;
+      _resetScanner();
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -107,6 +216,12 @@ class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
     }
   }
 
+  void _resetScanner() {
+    _handledScan = false;
+    _isLoadingProfile = false;
+    _isPickingImage = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -118,7 +233,9 @@ class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
           IconButton(
             tooltip: 'Toggle flashlight',
             onPressed: () => _controller.toggleTorch(),
-            icon: const Icon(Icons.flashlight_on_outlined),
+            icon: const Icon(
+              Icons.flashlight_on_outlined,
+            ),
           ),
         ],
       ),
@@ -144,7 +261,7 @@ class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
             ),
           ),
 
-          if (_isLoadingProfile)
+          if (_isLoadingProfile || _isPickingImage)
             Center(
               child: Card(
                 child: Padding(
@@ -158,7 +275,9 @@ class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
                       const CircularProgressIndicator(),
                       const SizedBox(height: 14),
                       Text(
-                        'Finding ZYNCUP profile...',
+                        _isPickingImage
+                            ? 'Choose a QR image...'
+                            : 'Finding ZYNCUP profile...',
                         style: theme.textTheme.titleMedium,
                       ),
                     ],
@@ -170,7 +289,7 @@ class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
           Positioned(
             left: 24,
             right: 24,
-            bottom: 40,
+            bottom: 32,
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(18),
@@ -191,9 +310,25 @@ class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Place the QR code inside the frame.',
+                      'Scan with your camera or choose a QR image from your device.',
                       textAlign: TextAlign.center,
                       style: theme.textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 14),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed:
+                            _isPickingImage || _isLoadingProfile
+                                ? null
+                                : _pickQrImage,
+                        icon: const Icon(
+                          Icons.photo_library_outlined,
+                        ),
+                        label: const Text(
+                          'Choose from Device',
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -205,5 +340,3 @@ class _ScanZyncupScreenState extends State<ScanZyncupScreen> {
     );
   }
 }
-
-
