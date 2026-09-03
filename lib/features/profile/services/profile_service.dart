@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../services/supabase_service.dart';
@@ -210,7 +210,7 @@ class ProfileService {
     debugPrint('Bucket: profile-images');
     debugPrint('File path: $filePath');
     debugPrint('User ID argument: $userId');
-    debugPrint('Auth user ID: ${currentUser?.id}');
+    debugPrint('Auth user ID: ');
     debugPrint('Auth session present: ${session != null}');
     debugPrint('Access token present: ${session?.accessToken.isNotEmpty}');
     debugPrint('File extension: $fileExtension');
@@ -218,7 +218,19 @@ class ProfileService {
     debugPrint('File size: ${imageBytes.length} bytes');
     debugPrint('================================================');
 
-    try {
+    if (currentUser == null) {
+      throw const AuthException(
+        'No authenticated user is available for profile image upload.',
+      );
+    }
+
+    if (currentUser.id != userId) {
+      throw AuthException(
+        'Profile image upload user mismatch. Expected , received .',
+      );
+    }
+
+    try { 
       await storage.uploadBinary(
         filePath,
         imageBytes,
@@ -239,7 +251,7 @@ class ProfileService {
       debugPrint('========== PROFILE IMAGE UPLOAD FAILED ==========');
       debugPrint('Bucket: profile-images');
       debugPrint('File path: $filePath');
-      debugPrint('Auth user ID: ${currentUser?.id}');
+      debugPrint('Auth user ID: ');
       debugPrint('Auth session present: ${session != null}');
       debugPrint('Error: $error');
       debugPrint('=================================================');
@@ -302,3 +314,4 @@ class ProfileService {
     return trimmedValue;
   }
 }
+

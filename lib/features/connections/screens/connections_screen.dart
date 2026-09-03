@@ -1,8 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import '../../auth/services/auth_service.dart';
 import '../../profile/services/profile_service.dart';
 import '../services/connection_service.dart';
+import 'connected_profile_screen.dart';
 
 class ConnectionsScreen extends StatefulWidget {
   const ConnectionsScreen({super.key});
@@ -429,6 +430,17 @@ class _AcceptedConnectionCard extends StatelessWidget {
 
         return Card(
           child: ListTile(
+            onTap: profile == null
+                ? null
+                : () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => ConnectedProfileScreen(
+                          profile: profile,
+                        ),
+                      ),
+                    );
+                  },
             leading: CircleAvatar(
               backgroundImage:
                   profile?.profileImageUrl != null &&
@@ -459,7 +471,7 @@ class _AcceptedConnectionCard extends StatelessWidget {
               profile?.zyncupId ?? '',
             ),
             trailing: const Icon(
-              Icons.check_circle_outline,
+              Icons.chevron_right,
             ),
           ),
         );
@@ -467,4 +479,3 @@ class _AcceptedConnectionCard extends StatelessWidget {
     );
   }
 }
-

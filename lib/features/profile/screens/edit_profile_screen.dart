@@ -1,4 +1,4 @@
-﻿import 'dart:typed_data';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -211,6 +211,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (!mounted) return;
 
       widget.onSaved();
+
+      if (!mounted) return;
+      Navigator.of(context).pop();
     } catch (error) {
       if (!mounted) return;
 
@@ -657,4 +660,5 @@ String? _validateDisplayName(String? value) {
 
   return null;
 }
+
 

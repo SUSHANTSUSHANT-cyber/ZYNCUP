@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../services/profile_service.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({
     required this.profile,
     required this.onEdit,
@@ -10,30 +10,7 @@ class ProfileScreen extends StatefulWidget {
   });
 
   final ZyncupProfile profile;
-  final Future<void> Function() onEdit;
-
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  late ZyncupProfile _profile;
-
-  @override
-  void initState() {
-    super.initState();
-    _profile = widget.profile;
-  }
-
-  Future<void> _refreshProfile() async {
-    final updatedProfile = await ProfileService.getProfile(_profile.id);
-
-    if (!mounted || updatedProfile == null) return;
-
-    setState(() {
-      _profile = updatedProfile;
-    });
-  }
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             tooltip: 'Edit profile',
-            onPressed: () async {
-              await widget.onEdit();
-              await _refreshProfile();
-            },
+            onPressed: onEdit,
             icon: const Icon(Icons.edit_outlined),
           ),
         ],
@@ -62,15 +36,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _ProfileHeader(profile: _profile),
+                  _ProfileHeader(profile: profile),
                   const SizedBox(height: 20),
 
-                  if (_hasText(_profile.bio)) ...[
+                  if (_hasText(profile.bio)) ...[
                     _InfoCard(
                       icon: Icons.short_text,
                       title: 'About',
                       child: Text(
-                        _profile.bio!.trim(),
+                        profile.bio!.trim(),
                         style: theme.textTheme.bodyLarge,
                       ),
                     ),
@@ -85,20 +59,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _ProfileDetail(
                           icon: Icons.email_outlined,
                           label: 'Email',
-                          value: _profile.email,
-                          shared: _profile.shareEmail,
+                          value: profile.email,
+                          shared: profile.shareEmail,
                         ),
                         _ProfileDetail(
                           icon: Icons.phone_outlined,
                           label: 'Phone',
-                          value: _profile.phone,
-                          shared: _profile.sharePhone,
+                          value: profile.phone,
+                          shared: profile.sharePhone,
                         ),
                         _ProfileDetail(
                           icon: Icons.language_outlined,
                           label: 'Website',
-                          value: _profile.website,
-                          shared: _profile.shareWebsite,
+                          value: profile.website,
+                          shared: profile.shareWebsite,
                         ),
                       ],
                     ),
@@ -114,20 +88,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _ProfileDetail(
                           icon: Icons.camera_alt_outlined,
                           label: 'Instagram',
-                          value: _profile.instagram,
-                          shared: _profile.shareInstagram,
+                          value: profile.instagram,
+                          shared: profile.shareInstagram,
                         ),
                         _ProfileDetail(
                           icon: Icons.work_outline,
                           label: 'LinkedIn',
-                          value: _profile.linkedin,
-                          shared: _profile.shareLinkedin,
+                          value: profile.linkedin,
+                          shared: profile.shareLinkedin,
                         ),
                         _ProfileDetail(
                           icon: Icons.public_outlined,
                           label: 'Other social',
-                          value: _profile.otherSocial,
-                          shared: _profile.shareOtherSocial,
+                          value: profile.otherSocial,
+                          shared: profile.shareOtherSocial,
                         ),
                       ],
                     ),
@@ -135,15 +109,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   const SizedBox(height: 16),
 
-                  _ZyncupIdCard(zyncupId: _profile.zyncupId),
+                  _ZyncupIdCard(zyncupId: profile.zyncupId),
 
                   const SizedBox(height: 24),
 
                   FilledButton.icon(
-                    onPressed: () async {
-                      await widget.onEdit();
-                      await _refreshProfile();
-                    },
+                    onPressed: onEdit,
                     icon: const Icon(Icons.edit_outlined),
                     label: const Text('Edit Profile'),
                   ),

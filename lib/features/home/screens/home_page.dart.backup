@@ -37,12 +37,14 @@ class HomePage extends StatelessWidget {
         MaterialPageRoute<void>(
           builder: (_) => ProfileScreen(
             profile: profile,
-            onEdit: () async {
-              await Navigator.of(context).push(
+            onEdit: () {
+              Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => EditProfileScreen(
                     profile: profile,
-                    onSaved: () {},
+                    onSaved: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ),
               );
