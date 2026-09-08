@@ -62,11 +62,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return AuthPanel(
       title: 'Welcome back',
-      subtitle: 'Step into the circle you are building, one real connection at a time.',
+      subtitle:
+          'Step into the circle you are building, one real connection at a time.',
       children: [
         if (!SupabaseService.isConfigured) ...[
           const _AuthNotice(
-            message: 'Supabase credentials are missing. Add the public URL and publishable key as Dart defines before using login.',
+            message:
+                'Supabase credentials are missing. Add the public URL and publishable key as Dart defines before using login.',
           ),
           const SizedBox(height: 16),
         ],
@@ -103,7 +105,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 validator: _validatePassword,
                 onFieldSubmitted: (_) => _isLoading ? null : _submit(),
               ),
-              const SizedBox(height: 22),
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: _isLoading
+                      ? null
+                      : () => Navigator.of(context).pushNamed(
+                            AppRoutes.forgotPassword,
+                          ),
+                  child: const Text('Forgot Password?'),
+                ),
+              ),
+              const SizedBox(height: 8),
               FilledButton.icon(
                 onPressed: _isLoading ? null : _submit,
                 icon: _isLoading

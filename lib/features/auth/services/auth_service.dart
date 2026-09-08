@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../services/supabase_service.dart';
@@ -48,6 +48,27 @@ class AuthService {
     return SupabaseService.client.auth.signInWithPassword(
       email: email,
       password: password,
+    );
+  }
+
+  static Future<void> sendPasswordResetEmail({
+    required String email,
+  }) {
+    _checkReady();
+
+    return SupabaseService.client.auth.resetPasswordForEmail(
+      email,
+      redirectTo: kIsWeb ? null : _mobileAuthRedirect,
+    );
+  }
+
+  static Future<UserResponse> updatePassword({
+    required String password,
+  }) {
+    _checkReady();
+
+    return SupabaseService.client.auth.updateUser(
+      UserAttributes(password: password),
     );
   }
 

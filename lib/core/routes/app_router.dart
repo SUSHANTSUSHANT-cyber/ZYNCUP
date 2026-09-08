@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../features/auth/screens/forgot_password_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
+import '../../features/auth/screens/reset_password_screen.dart';
 import '../../features/auth/screens/sign_up_screen.dart';
 import '../../features/profile/screens/profile_gate.dart';
 
@@ -8,6 +10,8 @@ abstract final class AppRoutes {
   static const home = '/';
   static const login = '/login';
   static const signUp = '/sign-up';
+  static const forgotPassword = '/forgot-password';
+  static const resetPassword = '/reset-password';
 }
 
 class AppRouter {
@@ -24,6 +28,8 @@ class AppRouter {
       builder: (_) => switch (guardedRoute) {
         AppRoutes.login => const LoginScreen(),
         AppRoutes.signUp => const SignUpScreen(),
+        AppRoutes.forgotPassword => const ForgotPasswordScreen(),
+        AppRoutes.resetPassword => const ResetPasswordScreen(),
         _ => const ProfileGate(),
       },
       settings: settings,
@@ -42,6 +48,8 @@ class AppRouter {
 
     if (routeName == AppRoutes.login ||
         routeName == AppRoutes.signUp ||
+        routeName == AppRoutes.forgotPassword ||
+        routeName == AppRoutes.resetPassword ||
         routeName == AppRoutes.home) {
       return routeName;
     }

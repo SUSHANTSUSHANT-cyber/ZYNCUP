@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -47,6 +47,22 @@ class _ZyncupAppState extends State<ZyncupApp> {
   }
 
   void _handleAuthChange(AuthState state) {
+    debugPrint('ZYNCUP_AUTH_EVENT: ' + state.event.name);
+    debugPrint('ZYNCUP AUTH EVENT:  | SESSION: ');
+    if (state.event == AuthChangeEvent.passwordRecovery) {
+      setState(() {
+        _isAuthenticated = true;
+      });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _navigatorKey.currentState?.pushNamedAndRemoveUntil(
+          AppRoutes.resetPassword,
+          (_) => false,
+        );
+      });
+      return;
+    }
+
     final nextIsAuthenticated = state.session != null;
 
     if (_isAuthenticated == nextIsAuthenticated) {
@@ -82,10 +98,8 @@ class _ZyncupAppState extends State<ZyncupApp> {
             theme: AppTheme.themeFor(
               widget.themeController.selectedTheme,
             ),
-
             initialRoute:
                 _isAuthenticated ? AppRoutes.home : AppRoutes.login,
-
             onGenerateRoute: (settings) {
               if (settings.name == AppRoutes.home) {
                 return MaterialPageRoute<void>(
@@ -200,3 +214,15 @@ class _ProfileGateState extends State<_ProfileGate> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
